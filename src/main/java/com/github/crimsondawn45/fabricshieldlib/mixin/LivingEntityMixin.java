@@ -48,7 +48,7 @@ public class LivingEntityMixin {
 
     //Makes armor stands equip shields correctly
     @Inject(at = @At(value = "HEAD"), method = "getPreferredEquipmentSlot(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/EquipmentSlot;", cancellable = true)
-    private static void getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> callbackinfo) {
+    private void getPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> callbackinfo) {
 
         if(stack.getItem() instanceof FabricShield) {
             callbackinfo.setReturnValue(EquipmentSlot.OFFHAND);

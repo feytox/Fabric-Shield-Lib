@@ -5,6 +5,7 @@ import com.github.crimsondawn45.fabricshieldlib.lib.event.ShieldDisabledCallback
 import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShield;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,10 +39,6 @@ import java.util.Optional;
 @SuppressWarnings("UnreachableCode")
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
-
-    @Shadow
-    @Final
-    PlayerInventory inventory;
 
     @Inject(at = @At(value = "HEAD"), method = "damageShield(F)V", locals = LocalCapture.CAPTURE_FAILHARD)
     private void damageShield(float amount, CallbackInfo callBackInfo) {
@@ -87,19 +84,19 @@ public class PlayerEntityMixin {
         ShieldDisabledCallback.EVENT.invoker().disable(player, player.getActiveHand(), activeItemStack);
 
         if (activeItem instanceof FabricShield shield) {
+            // Field 'f' is always greater than or equal to 1, '.nextFloat() is always less than one (equals 1 is nearly impossible),
+            // so the condition is always true.
+            // If this code is necessary - uncomment code and delete these comments
+//            float f = 1F + (float) EnchantmentHelper.getEfficiency(player) * 0.05F;
+//            if (player.getRandom().nextFloat() < f) {
 
-            float f = 1F + (float) EnchantmentHelper.getEfficiency(player) * 0.05F;
-
-
-            if (player.getRandom().nextFloat() < f) {
-                if (!FabricShieldLibConfig.universal_disable) {
-                    player.getItemCooldownManager().set((Item) shield, shield.getCoolDownTicks());
-                    player.clearActiveItem();
-                    player.getWorld().sendEntityStatus(player, (byte) 30);
-                    callbackInfo.cancel();
-                } else {
-                    getEntryList(player);
-                }
+            if (!FabricShieldLibConfig.universal_disable) {
+                player.getItemCooldownManager().set((Item) shield, shield.getCoolDownTicks());
+                player.clearActiveItem();
+                player.getWorld().sendEntityStatus(player, (byte) 30);
+                callbackInfo.cancel();
+            } else {
+                getEntryList(player);
             }
         } else if (activeItem instanceof ShieldItem) {
             if (FabricShieldLibConfig.universal_disable) {

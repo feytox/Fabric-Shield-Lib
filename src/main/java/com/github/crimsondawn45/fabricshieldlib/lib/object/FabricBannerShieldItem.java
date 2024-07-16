@@ -4,12 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.client.render.entity.model.ShieldEntityModel;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
@@ -43,7 +44,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
      * @param enchantability enchantability of shield. Vanilla: 9
      * @param repairItems    item(s) for repairing shield.
      */
-    public FabricBannerShieldItem(Settings settings, int coolDownTicks, int enchantability, Item... repairItems) {
+    public FabricBannerShieldItem(net.minecraft.item.Item.Settings settings, int coolDownTicks, int enchantability, Item... repairItems) {
         super(settings);
 
         //Register dispenser equip behavior
@@ -65,7 +66,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
      * @param coolDownTicks ticks shield will be disabled for when it with axe. Vanilla: 100
      * @param material      tool material.
      */
-    public FabricBannerShieldItem(Settings settings, int coolDownTicks, ToolMaterial material) {
+    public FabricBannerShieldItem(net.minecraft.item.Item.Settings settings, int coolDownTicks, ToolMaterial material) {
         super(settings.maxDamage(material.getDurability())); //Make durability match material
 
         //Register dispenser equip behavior
@@ -88,7 +89,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
      * @param enchantability enchantability of shield. Vanilla: 9
      * @param repairItemTag  item tag for repairing shield.
      */
-    public FabricBannerShieldItem(Settings settings, int coolDownTicks, int enchantability, TagKey<Item> repairItemTag) {
+    public FabricBannerShieldItem(net.minecraft.item.Item.Settings settings, int coolDownTicks, int enchantability, TagKey<Item> repairItemTag) {
         super(settings);
 
         //Register dispenser equip behavior
@@ -111,7 +112,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
      * @param enchantability enchantability of shield. Vanilla: 9
      * @param repairItemTags list of item tags for repairing shield.
      */
-    public FabricBannerShieldItem(Settings settings, int coolDownTicks, int enchantability, ShieldEntityModel modelFabricShield, SpriteIdentifier baseTexture, SpriteIdentifier nopatternTexture, Collection<TagKey<Item>> repairItemTags) {
+    public FabricBannerShieldItem(net.minecraft.item.Item.Settings settings, int coolDownTicks, int enchantability, ShieldEntityModel modelFabricShield, SpriteIdentifier baseTexture, SpriteIdentifier nopatternTexture, Collection<TagKey<Item>> repairItemTags) {
         super(settings);
 
         //Register dispenser equip behavior
@@ -129,7 +130,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
     }
 
     private void RegisterModelPredicate() {
-        ModelPredicateProviderRegistry.register(new Identifier("blocking"), (itemStack, clientWorld, livingEntity, i) -> {
+        ModelPredicateProviderRegistry.register(Identifier.ofVanilla("blocking"), (itemStack, clientWorld, livingEntity, i) -> {
             return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getActiveItem() == itemStack ? 1.0F : 0.0F;
         });
     }
@@ -163,7 +164,7 @@ public class FabricBannerShieldItem extends Item implements FabricShield {
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return 72000;
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.ShieldDecorationRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 
@@ -20,12 +21,12 @@ public class FabricShieldDecoratorRecipe extends ShieldDecorationRecipe {
     }
 
     @Override
-    public boolean matches(RecipeInputInventory recipeInputInventory, World world) {
+    public boolean matches(CraftingRecipeInput inventory, World world) {
         ItemStack itemStack = ItemStack.EMPTY;
         ItemStack itemStack2 = ItemStack.EMPTY;
 
-        for (int i = 0; i < recipeInputInventory.size(); ++i) {
-            ItemStack itemStack3 = recipeInputInventory.getStack(i);
+        for (int i = 0; i < inventory.getSize(); ++i) {
+            ItemStack itemStack3 = inventory.getStackInSlot(i);
             if (!itemStack3.isEmpty()) {
                 if (itemStack3.getItem() instanceof BannerItem) {
                     if (!itemStack2.isEmpty()) {
@@ -43,7 +44,7 @@ public class FabricShieldDecoratorRecipe extends ShieldDecorationRecipe {
                         return false;
                     }
 
-                    BannerPatternsComponent bannerPatternsComponent = (BannerPatternsComponent)itemStack3.getOrDefault(DataComponentTypes.BANNER_PATTERNS, BannerPatternsComponent.DEFAULT);
+                    BannerPatternsComponent bannerPatternsComponent = itemStack3.getOrDefault(DataComponentTypes.BANNER_PATTERNS, BannerPatternsComponent.DEFAULT);
                     if (!bannerPatternsComponent.layers().isEmpty()) {
                         return false;
                     }
@@ -56,14 +57,13 @@ public class FabricShieldDecoratorRecipe extends ShieldDecorationRecipe {
         return !itemStack.isEmpty() && !itemStack2.isEmpty();
     }
 
-
     @Override
-    public ItemStack craft(RecipeInputInventory recipeInputInventory, RegistryWrapper.WrapperLookup wrapperLookup) {
+    public ItemStack craft(CraftingRecipeInput inventory, RegistryWrapper.WrapperLookup wrapperLookup) {
         ItemStack itemStack = ItemStack.EMPTY;
         ItemStack itemStack2 = ItemStack.EMPTY;
 
-        for (int i = 0; i < recipeInputInventory.size(); ++i) {
-            ItemStack itemStack3 = recipeInputInventory.getStack(i);
+        for (int i = 0; i < inventory.getSize(); ++i) {
+            ItemStack itemStack3 = inventory.getStackInSlot(i);
             if (!itemStack3.isEmpty()) {
                 if (itemStack3.getItem() instanceof BannerItem) {
                     itemStack = itemStack3;
